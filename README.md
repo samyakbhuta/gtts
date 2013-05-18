@@ -2,7 +2,7 @@ Gujarati Text-to-Speech
 -----------------------
 Takes arbitrary Gujarati unicode characters and produces equivalent speech. WIP.
 
-### Why
+### Why ?
 One doesn't exist yet.
 
 ### Primary Users
@@ -12,13 +12,13 @@ Though, GTTS could/would be used by everybody, visually impaired individuals are
 
 Java version 1.7.0
 
-### How to start
+### How to start ?
 
 ```
 java -cp bin project.gui.APPGTTS
 ```
 
-### How to contribute
+### How to contribute ?
 
 #### As developer
 
