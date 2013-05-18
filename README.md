@@ -14,6 +14,12 @@ Java version 1.7.0
 
 ### How to start ?
 
+1. Open command line.
+
+2. Go to folder `gtts`.
+
+3. Run following command
+
 ```
 java -cp bin project.gui.APPGTTS
 ```
