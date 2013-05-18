@@ -2,6 +2,9 @@ Gujarati Text-to-Speech
 -----------------------
 Takes arbitrary Gujarati unicode characters and produces equivalent speech. WIP.
 
+### Why
+One doesn't exist yet.
+
 ### Requirement
 
 Java version 1.7.0
