@@ -5,6 +5,9 @@ Takes arbitrary Gujarati unicode characters and produces equivalent speech. WIP.
 ### Why
 One doesn't exist yet.
 
+### Primary Users
+Though, GTTS could/would be used by everybody, visually impaired individuals are expected to be benefited the most.
+
 ### Requirement
 
 Java version 1.7.0
