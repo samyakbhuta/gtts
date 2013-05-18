@@ -28,7 +28,7 @@ java -cp bin project.gui.APPGTTS
 
 #### As developer
 
-Please start forking this project and send your pull requests.
+Please start forking this project and send your pull requests. Here is [issues list] (https://github.com/samyakbhuta/gtts/issues).
 
 ##### Synthesis how ?
 
