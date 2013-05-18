@@ -1,0 +1,330 @@
+package project.gui;
+
+import project.ss.*;
+import project.ss.engine.*;
+import project.ss.xml.*;
+import project.ss.exception.*;
+import java.io.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.datatransfer.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.sound.sampled.*;
+
+/**
+ * This class extends the JFrame class and illustrates the functionalities 
+ * provided in project.ss package by instanciating Synthesizer with Synthesizer 
+ * Impl.
+ * The class contains various swing based components that are used with 
+ * Synthesizer.
+ */
+public class JTTSFrame extends JFrame implements ActionListener, LineListener, ChangeListener 
+{
+   
+   /**
+    * It is used to provide TTS functionality
+    */
+   Synthesizer synthesizer = new SynthesizerImpl ();
+   SourceDataLine SDLine = synthesizer.getCoreEngine().getPlayer().getSourceDataLine();
+   FloatControl gainControl = (FloatControl) SDLine.getControl(FloatControl.Type.MASTER_GAIN);
+ //  FloatControl panControl = (FloatControl) SDLine.getControl(FloatControl.Type.PAN); /// commented on may 24, 2012
+   private MultiLingualInscriptKeyboard keyListener;
+   
+   /**
+    * The TTSOptions to be used to allow different type of file configuration
+    */
+   private TTSOptions ttsOptions;
+   final Clipboard clipboard = this.getToolkit().getSystemClipboard();
+   private JMenuBar jMenuBar;
+   private JMenu optionMenu;
+   private JMenu helpMenu;
+   private JMenuItem propertiesItem;
+   private JMenuItem exitItem;
+   private JMenuItem aboutItem;
+   private JButton bPlay = new JButton ("<html><B><font color='red'>"+"Play"+"</font></B></html>");
+   private JButton bStop = new JButton ("<html><B><font color='red'>"+"Stop"+"</font></B></html>");
+   private JButton bClipBoard = new JButton ("<html><B><font color='red'>"+"Clipboard"+"</font></B></html>");
+   
+   /**
+    * GUI compnent used to set Gain control
+    */
+   private JSlider sGain = new JSlider (JSlider.VERTICAL, - 10, 10, 0);
+   
+   /**
+    * GUI compnent used to set Pan control
+    */
+   private JSlider sPan = new JSlider (JSlider.HORIZONTAL, - 1, 1, 0);
+   
+   /**
+    * It is used to provide input mechanism for Gujarati Unicode text
+    */
+   private JTextPane textPane = new JTextPane ();
+   private JLabel lblEnterText = new JLabel ("<html><B><font color='red'>"+"Enter Text:"+"</font></B></html>");
+   private JLabel lblVolumeControl = new JLabel ("<html><B><font color='red'>"+"Volume Control"+"</font></B></html>");
+   private JLabel lblBalance = new JLabel ("<html><B><font color='red'>"+"Balance"+"</font></B></html>");
+ //  private JLabel lblVolume = new JLabel ("Volume", new ImageIcon ("Volume24.gif"), SwingConstants.RIGHT);
+  private JLabel lblVolume = new JLabel ("<html><B><font color='red'>"+"Volume"+"</font></B></html>");
+   private JScrollPane scrollPane = new JScrollPane (textPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+   private JCheckBox cbMute = new JCheckBox ("<html><B><font color='red'>"+"Mute"+"</font></B></html>");
+   
+   /**
+    * Constructs a new JTTSFrame.
+    * @roseuid 3B068BFC0013
+    */
+   public JTTSFrame() 
+   {
+        super("Text To Speech System For Gujarati language.");
+        System.out.println("Text To Speech System For Gujarati language.");
+        jMenuBar = new JMenuBar();
+
+        optionMenu = new JMenu("<html><B><font color='red'>"+"Options"+"</font></B></html>");
+        helpMenu = new JMenu("<html><B><font color='red'>"+"Help"+"</font></B></html>");
+
+        propertiesItem = new JMenuItem("Properties");
+        exitItem = new JMenuItem("Exit");
+        aboutItem = new JMenuItem("About TTS");
+
+        propertiesItem.addActionListener(this);
+        exitItem.addActionListener(this);
+        optionMenu.add(propertiesItem);
+        optionMenu.add(new JSeparator());
+        optionMenu.add(exitItem);
+        jMenuBar.add(optionMenu);
+
+        helpMenu.addActionListener(this);
+
+        helpMenu.add(aboutItem);
+        jMenuBar.add(helpMenu);
+        setJMenuBar(jMenuBar);
+
+       JPanel contentPane = (JPanel)getContentPane();
+      
+       contentPane.setLayout(new BorderLayout());
+       JPanel southPanel = new JPanel();
+       southPanel.setLayout( new FlowLayout() );
+       southPanel.add(bPlay);
+       southPanel.add(bStop);
+       southPanel.add(bClipBoard);
+
+       JPanel eastPanel = new JPanel();
+       eastPanel.setLayout(new BoxLayout(eastPanel,BoxLayout.Y_AXIS));
+       eastPanel.add(lblVolumeControl);
+       eastPanel.add(new JPanel());
+       eastPanel.add(lblBalance);
+//       eastPanel.add(sPan);  /// commented on may 24, 2012
+       eastPanel.add(new JPanel());
+       eastPanel.add(lblVolume);
+       JPanel verticalSlider = new JPanel();
+       verticalSlider.setLayout(new FlowLayout());
+       verticalSlider.add(sGain);
+       eastPanel.add(verticalSlider);
+       eastPanel.add(cbMute);
+
+       JPanel centerPanel = new JPanel();
+       centerPanel.setLayout(new BorderLayout());
+       centerPanel.add(scrollPane, BorderLayout.CENTER);
+       scrollPane.setVisible(true);
+       JPanel topCenterPanel = new JPanel();
+       topCenterPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+       topCenterPanel.add(lblEnterText);
+       centerPanel.add(topCenterPanel, BorderLayout.NORTH);
+
+       contentPane.add(centerPanel, BorderLayout.CENTER);
+       contentPane.add(southPanel, BorderLayout.SOUTH);
+       contentPane.add(eastPanel, BorderLayout.EAST);
+       contentPane.add(new JPanel(), BorderLayout.WEST);
+
+
+       //add(contentPane);
+
+       bPlay.setActionCommand("Play");
+       bStop.setActionCommand("Stop");
+       bClipBoard.setActionCommand("GURAW");
+       bPlay.addActionListener(this);
+       bStop.addActionListener(this);
+       bClipBoard.addActionListener(this);
+
+       SDLine.addLineListener(this);
+       Control [] controls =  SDLine.getControls();
+       for (int i=0;i<controls.length;i++)
+        {
+           System.out.println(controls[i]);
+        }
+
+       sGain.setMajorTickSpacing(10);
+       sGain.setPaintLabels(true);
+       sPan.setMajorTickSpacing(1);
+       sPan.setPaintLabels(true);
+       sGain.addChangeListener(this);
+       sPan.addChangeListener(this);
+
+       cbMute.addItemListener(new MyCheckBoxListener());
+
+       keyListener = new MultiLingualInscriptKeyboard(MultiLingualInscriptKeyboard.GUJARATI);
+       textPane.addKeyListener(keyListener);
+       textPane.setFont(new Font("Arial Unicode MS", Font.PLAIN, 18));
+
+       setSize(800,450);
+       setVisible(true);
+
+		addWindowListener(new WindowAdapter()
+		{
+			public void windowClosing(WindowEvent e)
+			{
+				System.exit(0);
+			}
+		});
+		ttsOptions = new TTSOptions(new JFrame(), true , synthesizer);
+		ttsOptions.setVisible(false);    
+   }
+   
+   /**
+    * Sets the gian(volume )level of the Synthesizer in use.
+    * 
+    * @param dB
+    * @roseuid 3B068BFC0063
+    */
+   private void setGain(float dB) 
+   {
+    ((ControledPlayer)synthesizer.getCoreEngine().getPlayer()).setGain(dB);    
+   }
+   
+   /**
+    * Sets the pan(speaker volume  balance) value of the Synthesizer in use.
+    * 
+    * @param pan
+    * @roseuid 3B068BFC0081
+    */
+   private void setPan(float pan) 
+   {
+    ((ControledPlayer)synthesizer.getCoreEngine().getPlayer()).setPan(pan);    
+   }
+   
+   /**
+    * To make this class State Chane Listener 
+    * It is used to provide GUI controls for the
+    * volume and balance
+    * 
+    * @param e
+    * @roseuid 3B06A61503D1
+    */
+   public void stateChanged(ChangeEvent e) 
+   {
+     JSlider source = (JSlider)e.getSource();
+     if ( source == sGain )
+      {
+        int dB = (int)source.getValue();
+        setGain( dB);
+      }
+/*     if ( source == sPan )        // commented on may 24, 2012
+      {
+        int pan = (int)source.getValue();
+        setPan(pan);
+      }    */
+   }
+   
+   /**
+    * Used to invoke various method according to the nature of the event (ActionEvent)
+    * Implemention of the buttons provided in this class can be found in this method.
+    * 
+    * @param ae
+    * @roseuid 3B06A616006B
+    */
+   public void actionPerformed(ActionEvent ae) 
+   {
+     String  dataString = "";
+     Transferable clipData = clipboard.getContents(clipboard);
+     if ( ae.getActionCommand().equals("Properties") )
+         {
+	   ttsOptions.setVisible(true);
+	 }
+     if ( ae.getActionCommand().equals("Exit") )
+         {
+            System.exit(0);
+	 }
+     if ( clipData != null )
+       {
+         try
+            {
+              if ( clipData.isDataFlavorSupported(DataFlavor.stringFlavor))
+                  {
+                    dataString = (String) (clipData.getTransferData(DataFlavor.stringFlavor));
+                  }
+              }
+              catch (UnsupportedFlavorException e )
+              {
+                e.printStackTrace();
+              }
+              catch (IOException e)
+              {
+                e.printStackTrace();
+              }
+           }
+        try
+           {
+              if ( ae.getActionCommand().equals("GURAW") )
+                {
+                   synthesizer.speak(dataString,"GU","RAW");
+                }
+              if ( ae.getActionCommand().equals("Play") )
+                {
+                   synthesizer.speak(textPane.getText(),"GU","RAW");
+                }
+              if ( ae.getActionCommand().equals("Stop") )
+                  {
+                     synthesizer.stop();
+                  }
+           }
+           catch (UnsupportedIPA e)
+           {
+             e.printStackTrace();
+           }
+           catch (UnsupportedGU e)
+           {
+             e.printStackTrace();
+           }
+           catch (ImproperIPASequence e)
+           {
+             e.printStackTrace();
+           }
+           catch (ImproperDataFeed e)
+           {
+             e.printStackTrace();
+           }    
+   }
+   
+   /**
+    * Speaks out the equivalent of the the given text. 
+    * 
+    * @param strSourceText
+    * @roseuid 3B06ABC0028D
+    */
+   public void speak(String strSourceText) 
+   {
+      System.out.println("Inside Speak Method");    
+   }
+
+   public void update(javax.sound.sampled.LineEvent event)
+   {
+     System.out.println(event);
+   }
+
+   class MyCheckBoxListener implements ItemListener
+   {
+       public void itemStateChanged(ItemEvent e)
+        {
+          Object source = e.getItemSelectable();
+          if (e.getStateChange() == ItemEvent.DESELECTED)
+            {
+             ((ControledPlayer)synthesizer.getCoreEngine().getPlayer()).muteOff();
+            }
+          if (e.getStateChange() == ItemEvent.SELECTED)
+            {
+             ((ControledPlayer)synthesizer.getCoreEngine().getPlayer()).muteOn();
+            }
+        }
+   }
+
+
+}

@@ -1,0 +1,89 @@
+package project.ss.engine;
+
+import javax.sound.sampled.*;
+import java.io.*;
+
+
+ public class ControledPlayerImpl implements ControledPlayer 
+{
+ static SourceDataLine SDLine = null;
+ static AudioFormat audioFormat = new AudioFormat((float) 8000.0,(int) 16,(int)1, true, false);
+ static File dumpFile;
+ static FloatControl gainControl = null;
+ static FloatControl panControl = null;
+
+ static
+ {
+ try
+  {
+   // no buffer size has been set
+   // one should always create the srcDtline of desired format and with desired
+   // buffer size and should use setDataLine method
+   DataLine.Info  dlInfo = new DataLine.Info(SourceDataLine.class,audioFormat);
+   SourceDataLine sdLine = (SourceDataLine) AudioSystem.getLine(dlInfo);
+   SDLine.open(audioFormat);
+   setSourceDataLine(sdLine);
+  }
+  catch (LineUnavailableException e)
+  {
+        e.printStackTrace();
+  }
+ }
+ public void play ()
+ {
+   SDLine.start();
+   System.out.println("playing .. ");
+ }
+ public void stop ()
+ {
+   SDLine.stop();
+   SDLine.flush();
+   System.out.println("stopped and flushed ");
+ }
+ public void pause ()
+ {
+   SDLine.stop();
+ }
+ public void setGain( float gainInDb)
+ {
+  gainControl.setValue(dB);
+ }
+ public void setPan(float pan)
+ {
+  panControl.setValue(pan);
+ }
+ public float getGain()
+ {
+   return  gainControl.getValue();
+ }
+ public float getPan()
+ {
+   return  panControl.getValue();
+ }
+ public SourceDataLine getSourceDataLine ()
+ {
+   return SDLine;
+ }
+ public void  setSourceDataLine (SourceDataLine srcDataLine)
+ {
+   SDLine = srcDataLine;
+   gainControl = (FloatControl) SDLine.getControl(FloatControl.Type.MASTER_GAIN);
+   panControl = (FloatControl) SDLine.getControl(FloatControl.Type.PAN);
+ }
+ public void setDumpFile( File dmpFile)
+ {
+   dumpFile=dmpFile;
+ }
+ public File getDumpFile()
+  {
+    return dumpFile;
+  }
+ protected void finalized ()
+  {
+   SDLine.close();
+  }
+/* public static void main ( String [] args  )
+  {
+    PlayerImpl player = new  PlayerImpl ();
+  }*/
+}

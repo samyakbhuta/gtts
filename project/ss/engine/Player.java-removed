@@ -1,0 +1,63 @@
+		//Source file: C:\\project\\ss\\engine\\Player.java
+
+package project.ss.engine;
+
+import javax.sound.sampled.*;
+import java.io.*;
+
+/**
+ * This interface provides the abstraction for playing back of the audio.
+ * The Player describes very primary capabilities to play and stop audio
+ * It also provides the option to dump the audio being played back
+ * Player assumes that the SourceDataLine will be used to feed the data
+ * to be played.
+ */
+public interface Player 
+{
+   
+   /**
+    * Starts playing the audio
+    * @roseuid 3AFF70FA035D
+    */
+   public void play();
+   
+   /**
+    * Stop the audio play back
+    * @roseuid 3AFF70FA0367
+    */
+   public void stop();
+   
+   /**
+    * Sets the file where  audio data will be dumped
+    * 
+    * @param dmpFile
+    * @roseuid 3AFF70FA03A5
+    */
+   public void setDumpFile(File dmpFile);
+   
+   /**
+    * Returns the file currently in use for dumping the audio
+    * 
+    * @return java.io.File
+    * @roseuid 3B06A64D0287
+    */
+   public File getDumpFile();
+   
+   /**
+    * Sets the new Source Data Line 
+    * which will be used from now to playback the audio
+    * 
+    * @param srcDataLine
+    * @roseuid 3AFF70FA039A
+    */
+   public void setSourceDataLine(SourceDataLine srcDataLine);
+   
+   /**
+    * Return the Source Data Line 
+    * which is currently responsible for playing audio.
+    * 
+    * @return javax.sound.sampled.SourceDataLine
+    * @roseuid 3B06A64D020F
+    */
+   public SourceDataLine getSourceDataLine();
+}

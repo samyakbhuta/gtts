@@ -1,0 +1,5 @@
+the 
+ipatrans means Transcription and not translation
+
+
+NewEditor1.class and NewEditor1.java use if error.

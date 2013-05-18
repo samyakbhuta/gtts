@@ -1,0 +1,10 @@
+project.gui
+project.ss
+project.ss.engine
+project.ss.exception
+project.ss.lang.gu
+project.ss.lang.gu.ipatrans
+project.ss.lang.gu.prepro
+project.ss.misc
+project.ss.voice
+project.ss.xml
