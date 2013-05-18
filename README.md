@@ -10,7 +10,7 @@ Though, GTTS could/would be used by everybody, visually impaired individuals are
 
 ### Requirement
 
-Java version 1.7.0. See [Testing your Java installation] (https://github.com/samyakbhuta/gtts/wiki/Testing-your-Java-installation).
+Java version 1.7.0 or higher. See [Testing your Java installation] (https://github.com/samyakbhuta/gtts/wiki/Testing-your-Java-installation).
 
 We have tested GTTS application on Linux (Fedora), Windows and Mac. It should work on systems which supports Java version 1.7.0.
 
