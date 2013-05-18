@@ -24,5 +24,10 @@ Curious how TTS works ? Here is a small [presentation] (http://www.slideshare.ne
 
 #### As non-developer
 
+##### Help us segement
+
 We need volunteers for segmenting the recorded spoken words to complete our database of Segement Speech Units. See details here at [Segmentation] (https://github.com/samyakbhuta/gtts/wiki/Segmentation).
 
+##### Help us with your knowledge of Gujarati Language
+
+Volunteers are needed to build extensive list of accryonyms and abbreviations that Gujarati language has seen and/or continues to see in written form. Add your entries [here] (https://github.com/samyakbhuta/gtts/blob/master/project/ss/lang/gu/prepro/GujLookUp.txt)
